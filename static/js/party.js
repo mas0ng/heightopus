@@ -23,6 +23,7 @@ export function mountParty({ app, scene, code }) {
   let viewKey = '';
   let bar = null;
   let revealT = null;
+  let quotaT = null;
 
   scene.showLabels = true;
   scene.showGauge = false;
@@ -59,6 +60,31 @@ export function mountParty({ app, scene, code }) {
     }));
   };
 
+  // ------------------------------------------------------------ quota screen
+  // Cloudflare's free-plan limits reset at 00:00 UTC.
+  function quotaScreen() {
+    app.innerHTML = `${hudHTML('<b>Party</b><span>Offline</span>')}
+      <div class="party"><div class="card quota-card">
+        <h2>Party rooms are full for today</h2>
+        <p class="muted" style="margin:0">Our servers have hit their daily quota for online multiplayer, please try again tomorrow.</p>
+        <p class="quota-reset">Quota resets in: <b id="qleft">--:--:--</b></p>
+        <a class="btn sun" href="#/play">${icon('down')} Play the daily solo</a>
+        <button class="btn ghost" data-go="party" type="button">Back to party</button>
+        ${CREDIT}
+      </div></div>`;
+    bindHud();
+    const tick = () => {
+      const el = $('#qleft');
+      if (!alive || !el) { clearInterval(quotaT); return; }
+      const now = Date.now();
+      const reset = Date.UTC(new Date(now).getUTCFullYear(), new Date(now).getUTCMonth(), new Date(now).getUTCDate() + 1);
+      const t = Math.max(0, Math.floor((reset - now) / 1000));
+      const pad = (n) => String(n).padStart(2, '0');
+      el.textContent = `${pad(Math.floor(t / 3600))}:${pad(Math.floor(t / 60) % 60)}:${pad(t % 60)}`;
+    };
+    clearInterval(quotaT); tick(); quotaT = setInterval(tick, 1000);
+  }
+
   // ------------------------------------------------------------ entry screens
   function partyHome() {
     app.innerHTML = `${hudHTML('<b>Party</b><span>Play live</span>')}
@@ -80,6 +106,7 @@ export function mountParty({ app, scene, code }) {
       const btn = e.currentTarget; btn.disabled = true; btn.textContent = 'Creating room…';
       try {
         const r = await fetch(api('/api/party'), { method: 'POST' });
+        if (r.status === 429) { quotaScreen(); return; }
         const j = await r.json();
         if (!r.ok || !j.code) throw new Error(j.error || 'failed');
         sessionStorage.setItem('ho_autojoin', j.code);
@@ -104,6 +131,7 @@ export function mountParty({ app, scene, code }) {
     let info;
     try {
       const r = await fetch(api(`/api/party/${c}`));
+      if (r.status === 429) { if (alive) quotaScreen(); return; }
       info = r.ok ? await r.json() : null;
     } catch { info = undefined; }
     if (!alive) return;
@@ -390,7 +418,7 @@ export function mountParty({ app, scene, code }) {
 
   return () => {
     alive = false;
-    clearTimeout(retryT); clearInterval(pingT); clearInterval(revealT);
+    clearTimeout(retryT); clearInterval(pingT); clearInterval(revealT); clearInterval(quotaT);
     cancelAnimationFrame(raf);
     bar?.stop();
     try { ws?.close(1000, 'leave'); } catch {}

@@ -292,3 +292,7 @@ a.btn { text-decoration: none; }
   .share-preview { width: 100%; }
   .share-text { max-height: 220px; }
 }
+
+/* party quota screen */
+.quota-reset { margin: 0; font-size: 18px; }
+.quota-reset b { font-family: "Pixelify Sans", monospace; color: var(--sun, #ffd166); font-size: 24px; letter-spacing: .04em; font-variant-numeric: tabular-nums; }

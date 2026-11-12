@@ -66,6 +66,8 @@ export default {
 
       return json({ error: 'Not found' }, 404);
     } catch (err) {
+      // Free-plan Durable Object limits surface as exceptions: report them as a quota hit.
+      if (/limit|quota|exceeded/i.test(String(err?.message || err))) return json({ error: 'quota' }, 429);
       return json({ error: 'Server error', detail: String(err?.message || err) }, 500);
     }
   },

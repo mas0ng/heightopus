@@ -22,7 +22,7 @@
   <a href="https://heightopus.com"><b>Play now</b></a> ·
   <a href="https://heightopus.com/how-to-play/">How to play</a> ·
   <a href="https://heightopus.com/heights/">All heights</a> ·
-  <a href="https://mas0ng.com/projects/heightopus/">Project page</a> ·
+  <a href="https://mas0ng.com/?from=github_readme&amp;project=heightopus">mas0ng.com</a> ·
   <a href="https://heightopus.com/privacy/">Privacy</a> ·
   <a href="SECURITY.md">Security</a>
 </p>
@@ -166,4 +166,4 @@ Please report vulnerabilities privately. See [SECURITY.md](SECURITY.md).
 
 ---
 
-<p align="center"><sub>Made by <a href="https://mas0ng.com/projects/heightopus/">mas0ng.com</a></sub></p>
+<p align="center"><sub>Made by <a href="https://mas0ng.com/?from=github_readme&amp;project=heightopus">mas0ng.com</a></sub></p>

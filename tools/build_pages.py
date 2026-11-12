@@ -177,7 +177,7 @@ def page(*, title, desc, path, body, ld, robots="index, follow, max-image-previe
 </main>
 <footer class="foot">
   <a href="/">Heightopus</a><a href="/heights/">All heights</a><a href="/how-to-play/">How to play</a><a href="/#/party">Party rooms</a><a href="/privacy/">Privacy</a>
-  <span>Made by <a href="https://mas0ng.com/projects/heightopus/">mas0ng.com</a></span>
+  <span>Made by <a href="https://mas0ng.com/?from=project_footer&amp;project=heightopus">mas0ng.com</a></span>
 </footer>
 </body>
 </html>
@@ -446,7 +446,7 @@ def privacy():
 </section>
 <section class="card">
   <h2>Who we are</h2>
-  <p>Heightopus is made and run by Mason Gibbs (<a href="https://mas0ng.com/projects/heightopus/">mas0ng.com</a>), who is the data controller for the information described here. Questions or requests: <a href="mailto:mason@mas0ng.com?subject=Heightopus%20privacy">mason@mas0ng.com</a>.</p>
+  <p>Heightopus is made and run by Mason Gibbs (<a href="https://mas0ng.com/?from=project_privacy&amp;project=heightopus">mas0ng.com</a>), who is the data controller for the information described here. Questions or requests: <a href="mailto:mason@mas0ng.com?subject=Heightopus%20privacy">mason@mas0ng.com</a>.</p>
 </section>
 <section class="card">
   <h2>What we process, and why</h2>

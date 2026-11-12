@@ -5,7 +5,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "heightopus",
   "compatibility_date": "2026-11-10",
-  "observability": { "enabled": true },
+  "observability": { "enabled": false },
   "assets": {
     "directory": "static",
     "not_found_handling": "404-page"

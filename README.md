@@ -23,6 +23,7 @@
   <a href="https://heightopus.com/how-to-play/">How to play</a> ·
   <a href="https://heightopus.com/heights/">All heights</a> ·
   <a href="https://mas0ng.com/projects/heightopus/">Project page</a> ·
+  <a href="https://heightopus.com/privacy/">Privacy</a> ·
   <a href="SECURITY.md">Security</a>
 </p>
 

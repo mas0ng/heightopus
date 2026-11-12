@@ -21,3 +21,7 @@ class_name = "DailyStats"
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["Room", "DailyStats"]
+
+# No request logging (see /privacy/).
+[observability]
+enabled = false

@@ -126,7 +126,7 @@ def load():
 
 
 # ---------------------------------------------------------------- layout
-FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Pixelify+Sans:wght@500;700&display=swap" rel="stylesheet">'
+FONTS = '<link rel="preload" href="/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/pixelify-sans-latin.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/css/fonts.css">'
 
 
 def page(*, title, desc, path, body, ld, robots="index, follow, max-image-preview:large", canonical=True):
@@ -176,7 +176,7 @@ def page(*, title, desc, path, body, ld, robots="index, follow, max-image-previe
 {body}
 </main>
 <footer class="foot">
-  <a href="/">Heightopus</a><a href="/heights/">All heights</a><a href="/how-to-play/">How to play</a><a href="/#/party">Party rooms</a>
+  <a href="/">Heightopus</a><a href="/heights/">All heights</a><a href="/how-to-play/">How to play</a><a href="/#/party">Party rooms</a><a href="/privacy/">Privacy</a>
   <span>Made by <a href="https://mas0ng.com/projects/heightopus/">mas0ng.com</a></span>
 </footer>
 </body>
@@ -415,11 +415,97 @@ def not_found():
     return page(title="Page not found | Heightopus", desc="This page could not be found.", path="/404", body=body, ld=ld, robots="noindex, follow", canonical=False)
 
 
+PRIVACY_UPDATED = "12 November 2026"
+STORAGE = [
+    ("ho_daily_…", "Today's questions, your answers and whether you've finished, so you can carry on if you close the page."),
+    ("ho_stats", "Your streak, best depth and number of dives."),
+    ("ho_unit, ho_mute", "Whether you use metres or feet, and whether sound is on."),
+    ("ho_name, ho_color", "The nickname and colour you choose for party rooms."),
+    ("ho_token", "A random code that lets a party room recognise you if you reconnect. It isn't linked to who you are."),
+]
+
+
+def privacy():
+    title = "Privacy Notice | Heightopus"
+    desc = "How Heightopus handles your information: no accounts, no ads, no tracking. What little is processed, why, how long it's kept and your rights under UK GDPR."
+    storage = "".join(f"<tr><th scope=\"row\"><code>{e(k)}</code></th><td>{e(v)}</td></tr>" for k, v in STORAGE)
+    trail = [("Heightopus", "/"), ("Privacy", "/privacy/")]
+    body = f"""{crumbs_html(trail)}
+<section class="card">
+  <h1>Privacy notice</h1>
+  <p class="muted">Last updated {PRIVACY_UPDATED}.</p>
+  <h2>The short version</h2>
+  <ul>
+    <li>You don't need an account, and we never ask for your name, email or age.</li>
+    <li>There are no ads, no analytics and no tracking cookies.</li>
+    <li>Your progress and settings stay on your own device.</li>
+    <li>If you finish a daily, only your score is sent, with nothing that says who you are.</li>
+    <li>In a party room, the other players see the nickname you pick and your guesses. Don't use your real name.</li>
+    <li>Like every website, our host (Cloudflare) briefly handles your IP address to deliver the pages and keep them safe.</li>
+  </ul>
+</section>
+<section class="card">
+  <h2>Who we are</h2>
+  <p>Heightopus is made and run by Mason Gibbs (<a href="https://mas0ng.com/projects/heightopus/">mas0ng.com</a>), who is the data controller for the information described here. Questions or requests: <a href="mailto:mason@mas0ng.com?subject=Heightopus%20privacy">mason@mas0ng.com</a>.</p>
+</section>
+<section class="card">
+  <h2>What we process, and why</h2>
+  <table>
+    <thead><tr><th scope="col">Information</th><th scope="col">Why</th><th scope="col">How long</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Your IP address and basic request details (browser type, time, page requested)</th><td>Cloudflare, our hosting provider, needs these to deliver the site and the party rooms and to protect them from abuse. Lawful basis: legitimate interests in running a working, secure service.</td><td>Handled in transit. Cloudflare may keep short-lived security and diagnostic logs under its own retention rules. We don't keep request logs.</td></tr>
+      <tr><th scope="row">Your total score when you finish a daily</th><td>To show how deep you went compared with other people that day. Only the score is stored, added to an anonymous count for that day; no name, IP address or identifier is stored with it.</td><td>Kept as anonymous totals.</td></tr>
+      <tr><th scope="row">In party rooms: your nickname, colour, guesses and a random reconnect code</th><td>To run the room you joined: showing players to each other, scoring rounds and letting you rejoin if your connection drops. Lawful basis: legitimate interests in providing the feature you chose to use.</td><td>Only while the room is in use. Rooms delete themselves automatically, usually within an hour of the last person leaving.</td></tr>
+    </tbody>
+  </table>
+  <p class="muted" style="margin-top:12px">We don't sell or share your information, use it for advertising, build profiles, or make automated decisions about you.</p>
+</section>
+<section class="card">
+  <h2>What's stored on your device</h2>
+  <p>Heightopus saves a few small items in your browser's local storage so it works the way you expect. They never leave your device unless stated above, and we don't set cookies. Because they're needed for the features you use, no consent banner is required under the UK's PECR rules. Clearing this site's data in your browser removes them all.</p>
+  <table><thead><tr><th scope="col">Item</th><th scope="col">What it's for</th></tr></thead><tbody>{storage}</tbody></table>
+  <p class="muted" style="margin-top:12px">Cloudflare may set a strictly necessary security cookie in some situations, for example to tell people apart from bots.</p>
+</section>
+<section class="card">
+  <h2>Who else is involved</h2>
+  <ul>
+    <li><strong>Cloudflare</strong> hosts the site, runs the party rooms and stores the anonymous daily totals, acting on our behalf. Cloudflare may process data outside the UK; it does so under approved legal safeguards such as standard contractual clauses. See <a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">Cloudflare's privacy policy</a>.</li>
+    <li><strong>Other players</strong> in a party room see your nickname, colour and guesses.</li>
+    <li><strong>Sharing.</strong> If you press Post on X or WhatsApp, your result text is passed to that service, and its own privacy policy applies. Nothing is sent unless you choose to share.</li>
+  </ul>
+  <p class="muted">Our fonts and images are served from heightopus.com itself, so loading a page doesn't contact Google or other third parties.</p>
+</section>
+<section class="card">
+  <h2>Young people</h2>
+  <p>Heightopus is suitable for all ages and is designed to collect as little as possible. There are no accounts, chats, ads or tracking, and nothing is shown publicly. Party nicknames are only seen by people in the same room, so pick a fun one rather than your real name.</p>
+</section>
+<section class="card">
+  <h2>Your rights</h2>
+  <p>Under UK data protection law you can ask to see, correct or delete personal information about you, object to how it's used, or ask us to limit its use. Because we don't hold accounts or link anything to you, there's usually nothing we can find. Your on-device data is in your control, and party room data is deleted automatically. If you have a request or concern, email <a href="mailto:mason@mas0ng.com?subject=Heightopus%20privacy">mason@mas0ng.com</a>.</p>
+  <p>You can also complain to the Information Commissioner's Office (ICO): <a href="https://ico.org.uk/make-a-complaint/" rel="noopener">ico.org.uk/make-a-complaint</a>, or call 0303 123 1113.</p>
+</section>
+<section class="card">
+  <h2>Changes</h2>
+  <p>If this notice changes, we'll update the date at the top. Security issues can be reported through our <a href="https://github.com/mas0ng/heightopus/blob/main/SECURITY.md" rel="noopener">security policy</a>.</p>
+</section>"""
+    ld = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {"@type": "WebPage", "@id": f"{SITE}/privacy/#page", "url": f"{SITE}/privacy/", "name": title, "description": desc,
+             "inLanguage": "en", "dateModified": UPDATED, "isPartOf": WEBSITE_REF, "author": PUBLISHER,
+             "breadcrumb": {"@id": f"{SITE}/privacy/#breadcrumb"}},
+            {**crumbs_ld(trail), "@id": f"{SITE}/privacy/#breadcrumb"},
+        ],
+    }
+    return page(title=title, desc=desc, path="/privacy/", body=body, ld=ld)
+
+
 def sitemap(qs):
     urls = [
         (f"{SITE}/", ["/img/og-1200x630.jpg", "/img/screenshot-home.jpg", "/img/screenshot-dive.jpg", "/img/screenshot-party.jpg"]),
         (f"{SITE}/how-to-play/", []),
         (f"{SITE}/heights/", []),
+        (f"{SITE}/privacy/", []),
     ] + [(q["url"], []) for q in qs]
     out = ['<?xml version="1.0" encoding="UTF-8"?>',
            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">']
@@ -452,9 +538,10 @@ def main():
         write(f"heights/{q['slug']}/index.html", height_page(q, qs))
     write("heights/index.html", heights_index(qs))
     write("how-to-play/index.html", how_to_play())
+    write("privacy/index.html", privacy())
     write("404.html", not_found())
     write("sitemap.xml", sitemap(qs))
-    print(f"Built {len(qs)} height pages, the heights index, how-to-play, 404 and a sitemap with {len(qs) + 3} URLs.")
+    print(f"Built {len(qs)} height pages, the heights index, how-to-play, privacy, 404 and a sitemap with {len(qs) + 4} URLs.")
 
 
 if __name__ == "__main__":

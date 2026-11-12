@@ -245,7 +245,7 @@ export function modal(html, { onClose } = {}) {
 }
 export function closeModal() { document.getElementById('modal')?.remove(); }
 
-export const CREDIT = `<div class="credit">Made by <a href="https://mas0ng.com/projects/heightopus/" target="_blank" rel="noopener">mas0ng.com</a></div>`;
+export const CREDIT = `<div class="credit">Made by <a href="https://mas0ng.com/projects/heightopus/" target="_blank" rel="noopener">mas0ng.com</a> · <a href="/privacy/">Privacy</a></div>`;
 
 export function helpModal() {
   modal(`

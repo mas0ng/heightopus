@@ -244,6 +244,7 @@ a.btn { text-decoration: none; }
   .squares i { width: 9px; height: 9px; }
   .card { padding: 14px 14px; }
   .home-card h1, .home-card h2 { font-size: 22px; }
+  .home-card .btn.big { white-space: nowrap; font-size: 17px; padding: 12px 10px; gap: 6px; }
   .band-head h2 { font-size: 25px; }
   .cmp-row { grid-template-columns: 54px 1fr auto; font-size: 13px; }
   .units button { padding: 6px 7px; }

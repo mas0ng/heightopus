@@ -84,7 +84,7 @@ function home() {
         <p>Guess the height of famous landmarks, skyscrapers, mountains, animals and people. The closer you get, the deeper your octopus dives, all the way down to Challenger Deep.</p>
         ${done ? `<div class="stat-line"><span class="chip sun">Today: ${fmtM(depthFor(pts))} · ${pts.toLocaleString()} pts</span></div>` : ''}
         <div class="row">
-          <button class="btn coral big" data-go="${done ? 'results' : 'play'}" type="button">${done ? "See today's dive" : st?.answers?.length ? 'Continue dive' : 'Dive in'} ${icon('down')}</button>
+          <button class="btn coral big" data-go="${done ? 'results' : 'play'}" type="button">${done ? `Today's dive ${icon('right')}` : st?.answers?.length ? `Continue ${icon('down')}` : `Dive in ${icon('down')}`}</button>
           <button class="btn aqua big" data-go="party" type="button">${icon('users')} Party</button>
         </div>
         <div class="mini-links">
@@ -99,7 +99,17 @@ function home() {
     </div>
   </div>`;
   const iv = setInterval(() => { const c = $('#cd'); if (c) c.textContent = hms(msToMidnight()); }, 1000);
-  return () => clearInterval(iv);
+  // Keep the octopus in the open water between the logo and the card (phones put the card higher).
+  const fit = () => {
+    const logo = $('.home .logo'), card = $('.home-card');
+    if (!logo || !card) return;
+    const gapMid = (logo.getBoundingClientRect().bottom + card.getBoundingClientRect().top) / 2;
+    scene.anchor = Math.max(0.12, Math.min(0.42, gapMid / window.innerHeight));
+  };
+  fit();
+  document.fonts?.ready.then(fit);
+  window.addEventListener('resize', fit);
+  return () => { clearInterval(iv); window.removeEventListener('resize', fit); };
 }
 
 // ---------- solo play

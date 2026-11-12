@@ -1,0 +1,10 @@
+{
+  "name": "Heightopus",
+  "short_name": "Heightopus",
+  "description": "Guess heights. Dive deeper.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#06101d",
+  "theme_color": "#06101d",
+  "icons": [{ "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

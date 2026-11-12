@@ -1,0 +1,23 @@
+name = "heightopus-api"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+# The site (Pages) and the API share one origin:
+# https://heightopus.com/api/... goes to this worker.
+routes = [
+  { pattern = "heightopus.com/api/*", zone_name = "heightopus.com" },
+]
+
+# One Durable Object per party room (WebSockets, hibernation = no cost while idle)
+[[durable_objects.bindings]]
+name = "ROOMS"
+class_name = "Room"
+
+# One Durable Object per day for the "deeper than X% of divers" stat
+[[durable_objects.bindings]]
+name = "STATS"
+class_name = "DailyStats"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Room", "DailyStats"]

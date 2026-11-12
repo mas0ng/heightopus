@@ -1,0 +1,16 @@
+// Static site (Cloudflare Pages on Workers: static assets only, no code runs).
+// Deploy from this folder with:  npx.cmd wrangler deploy
+// The API is a separate worker in ./worker, routed at heightopus.com/api/*.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "heightopus",
+  "compatibility_date": "2026-11-10",
+  "observability": { "enabled": true },
+  "assets": {
+    "directory": "static",
+    "not_found_handling": "single-page-application"
+  },
+  "routes": [
+    { "pattern": "heightopus.com", "custom_domain": true }
+  ]
+}

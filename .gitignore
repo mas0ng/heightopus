@@ -1,0 +1,14 @@
+node_modules/
+.wrangler/
+.dryrun/
+__pycache__/
+.DS_Store
+
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
+
+# Local-only files
+.claude/
+RESEARCH.md

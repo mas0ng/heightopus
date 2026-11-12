@@ -7,6 +7,8 @@ import {
 import { sfx, isMuted, setMuted } from './sfx.js';
 import { api, SITE_URL } from './config.js';
 import { mountParty } from './party.js';
+import { openShare } from './share.js';
+import { icon } from './icons.js';
 
 const app = $('#app');
 const scene = new Scene($('#scene'), $('#overlay'));
@@ -74,20 +76,21 @@ function home() {
 
   app.innerHTML = `
   <div class="home">
-    <div class="logo" aria-label="Heightopus">Height<span class="o">opus</span></div>
+    <h1 class="logo">Height<span class="o">opus</span></h1>
     <div style="display:grid;gap:8px;width:min(560px,100%)">
       <div class="home-card card">
         <div class="eyebrow">Daily #${day} · 10 questions · Free</div>
-        <h1>How tall is it, really?</h1>
-        <p>Guess the height of famous things. The closer you get, the deeper your octopus dives, all the way down to Challenger Deep.</p>
+        <h2>How tall is it, really?</h2>
+        <p>Guess the height of famous landmarks, skyscrapers, mountains, animals and people. The closer you get, the deeper your octopus dives, all the way down to Challenger Deep.</p>
         ${done ? `<div class="stat-line"><span class="chip sun">Today: ${fmtM(depthFor(pts))} · ${pts.toLocaleString()} pts</span></div>` : ''}
         <div class="row">
-          <button class="btn coral big" data-go="${done ? 'results' : 'play'}" type="button">${done ? "See today's dive" : st?.answers?.length ? 'Continue dive' : 'Dive in ↓'}</button>
-          <button class="btn aqua big" data-go="party" type="button">Party 🐙</button>
+          <button class="btn coral big" data-go="${done ? 'results' : 'play'}" type="button">${done ? "See today's dive" : st?.answers?.length ? 'Continue dive' : 'Dive in'} ${icon('down')}</button>
+          <button class="btn aqua big" data-go="party" type="button">${icon('users')} Party</button>
         </div>
         <div class="mini-links">
           <button class="linkish" data-go="unlimited" type="button">Unlimited</button>
-          <button class="linkish" data-help type="button">How to play</button>
+          <a class="linkish" href="/how-to-play/">How to play</a>
+          <a class="linkish" href="/heights/">All heights</a>
           <span class="muted" style="padding:6px 0">New questions in <b id="cd">${hms(msToMidnight())}</b></span>
         </div>
         ${stats.played ? `<div class="stat-line"><span class="chip">🔥 Streak ${stats.streak}</span><span class="chip">Best ${fmtM(stats.best)}</span><span class="chip">Dives ${stats.played}</span></div>` : ''}
@@ -133,9 +136,9 @@ function solo(mode) {
       <div class="hud-left"><b id="hDepth">0m</b><span id="hPts">0 pts</span></div>
       <div class="hud-mid"><div class="squares" id="sq"></div><small id="qn"></small></div>
       <div class="hud-right">
-        <button class="btn icon ghost" id="mute" type="button" aria-label="Toggle sound">${isMuted() ? '🔇' : '🔊'}</button>
-        <button class="btn icon ghost" data-help type="button" aria-label="How to play">?</button>
-        <button class="btn icon ghost" id="quit" type="button" aria-label="Back to home">✕</button>
+        <button class="btn icon ghost" id="mute" type="button" aria-label="Toggle sound">${icon(isMuted() ? 'mute' : 'volume')}</button>
+        <button class="btn icon ghost" data-help type="button" aria-label="How to play">${icon('help')}</button>
+        <button class="btn icon ghost" id="quit" type="button" aria-label="Back to home">${icon('home')}</button>
       </div>
     </div>
     <div class="play-main">
@@ -143,7 +146,7 @@ function solo(mode) {
       <div id="barSlot" style="width:min(600px,100%);display:flex;justify-content:center"></div>
     </div>`;
 
-  $('#mute').addEventListener('click', (e) => { setMuted(!isMuted()); e.currentTarget.textContent = isMuted() ? '🔇' : '🔊'; });
+  $('#mute').addEventListener('click', (e) => { setMuted(!isMuted()); e.currentTarget.innerHTML = icon(isMuted() ? 'mute' : 'volume'); });
   $('#quit').addEventListener('click', () => { location.hash = '#/'; });
 
   const bar = createBar({
@@ -202,7 +205,7 @@ function solo(mode) {
     $('#stage').innerHTML = revealHTML({
       band: r.band, pts: r.points, mult: r.mult, guess: m, actual: q.m, fact: q.fact,
       footLeft: `Now heading to <b style="color:var(--ink)">${fmtM(depth)}</b>`,
-      nextLabel: last ? 'See results' : 'Next →',
+      nextLabel: last ? 'See results ' + icon('right', 18) : 'Next ' + icon('right', 18),
     });
     animateBars($('#stage'));
     i++;
@@ -288,7 +291,7 @@ function results(opts = {}) {
     <div class="hud">
       <div class="hud-left"><b>${fmtM(depth)}</b><span>${pts.toLocaleString()} pts</span></div>
       <div></div>
-      <div class="hud-right"><button class="btn icon ghost" data-go="" type="button" aria-label="Home">⌂</button></div>
+      <div class="hud-right"><button class="btn icon ghost" data-go="" type="button" aria-label="Home">${icon('home')}</button></div>
     </div>
     <div class="results">
       <div class="card">
@@ -300,8 +303,8 @@ function results(opts = {}) {
         <div class="strip">${strip}</div>
         <div id="pct" class="muted" style="font-size:14px"></div>
         <div class="row">
-          <button class="btn coral" id="share" type="button">Share result</button>
-          <button class="btn aqua" data-go="party" type="button">Play with friends</button>
+          <button class="btn coral" id="share" type="button">${icon('share')} Share result</button>
+          <button class="btn aqua" data-go="party" type="button">${icon('users')} Play with friends</button>
         </div>
         <div class="row">
           <button class="btn ghost" data-go="unlimited" type="button">${opts.unlimited ? 'Dive again' : 'Play Unlimited'}</button>
@@ -312,12 +315,15 @@ function results(opts = {}) {
       </div>
     </div>`;
 
-  $('#share').addEventListener('click', async () => {
-    const text = `Heightopus ${opts.unlimited ? 'Unlimited' : `#${day}`} 🐙\nDove ${fmtM(depth)} · ${pts.toLocaleString()} pts\n${answers.map((a) => EMOJI[a.band] || '⬜').join('')}\n${SITE_URL}`;
-    try {
-      if (navigator.share && isTouch()) await navigator.share({ text });
-      else { await navigator.clipboard.writeText(text); toast('Copied to clipboard!'); }
-    } catch { /* cancelled */ }
+  $('#share').addEventListener('click', () => {
+    sfx.click();
+    openShare({
+      label: opts.unlimited ? 'Unlimited' : `Daily #${day}`,
+      depth, pts, max, title,
+      bands: answers.map((a) => a.band),
+      pct: st?.pct || null,
+      color: myColor(),
+    });
   });
 
   // percentile vs today's divers

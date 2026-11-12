@@ -1,6 +1,7 @@
 // Shared UI helpers for solo and party play.
 import { BANDS } from './scoring.js';
 import { sfx } from './sfx.js';
+import { icon } from './icons.js';
 
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 export const $ = (sel, root = document) => root.querySelector(sel);
@@ -130,7 +131,7 @@ export function createBar({ onSubmit, onPass, onTimeout, allowPass = true, place
         <button type="button" data-u="m">m</button><button type="button" data-u="ft">ft</button>
       </div>
     </form>
-    <button class="btn coral" data-dive type="button" aria-label="Lock in guess">Dive ↓</button>`;
+    <button class="btn coral" data-dive type="button" aria-label="Lock in guess">Dive ${icon('down', 18)}</button>`;
   const input = el.querySelector('input');
   const form = el.querySelector('form');
   const ring = el.querySelector('.fg');
@@ -205,7 +206,7 @@ export function createBar({ onSubmit, onPass, onTimeout, allowPass = true, place
 export const isTouch = () => matchMedia('(pointer: coarse)').matches;
 
 // ---------- reveal card
-export function revealHTML({ band, pts, mult, guess, actual, fact, footLeft, nextLabel = 'Next →', showNext = true, extra = '' }) {
+export function revealHTML({ band, pts, mult, guess, actual, fact, footLeft, nextLabel = 'Next ' + icon('right', 18), showNext = true, extra = '' }) {
   const max = Math.max(guess || 0, actual);
   const pY = guess ? Math.max(2, (guess / max) * 100) : 0;
   const pA = Math.max(2, (actual / max) * 100);
@@ -244,7 +245,7 @@ export function modal(html, { onClose } = {}) {
 }
 export function closeModal() { document.getElementById('modal')?.remove(); }
 
-export const CREDIT = `<div class="credit">Game developed by <a href="https://mas0ng.com/projects/heightopus/" target="_blank" rel="noopener">mas0ng.com</a></div>`;
+export const CREDIT = `<div class="credit">Made by <a href="https://mas0ng.com/projects/heightopus/" target="_blank" rel="noopener">mas0ng.com</a></div>`;
 
 export function helpModal() {
   modal(`

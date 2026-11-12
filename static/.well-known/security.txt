@@ -1,0 +1,6 @@
+Contact: mailto:mason@mas0ng.com
+Contact: https://github.com/mas0ng/heightopus/security/advisories/new
+Expires: 2027-11-12T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://heightopus.com/.well-known/security.txt
+Policy: https://github.com/mas0ng/heightopus/blob/main/SECURITY.md

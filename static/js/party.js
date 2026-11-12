@@ -1,4 +1,4 @@
-import { depthFor, maxPointsFor, multFor } from './scoring.js';
+import { depthFor, maxPointsFor, multFor, titleFor } from './scoring.js';
 import { fmtM } from './scene.js';
 import {
   $, esc, load, save, toast, createBar, revealHTML, animateBars, COLORS, myName, myColor,
@@ -6,6 +6,8 @@ import {
 } from './ui.js';
 import { sfx, isMuted, setMuted } from './sfx.js';
 import { api, wsUrl } from './config.js';
+import { icon } from './icons.js';
+import { openShare } from './share.js';
 
 function token() {
   let t = load('ho_token', null);
@@ -32,13 +34,13 @@ export function mountParty({ app, scene, code }) {
       <div class="hud-left">${left}</div>
       <div></div>
       <div class="hud-right">
-        <button class="btn icon ghost" id="mute" type="button" aria-label="Toggle sound">${isMuted() ? '🔇' : '🔊'}</button>
-        <button class="btn icon ghost" data-help type="button" aria-label="How to play">?</button>
-        <button class="btn icon ghost" id="leave" type="button" aria-label="Leave">✕</button>
+        <button class="btn icon ghost" id="mute" type="button" aria-label="Toggle sound">${icon(isMuted() ? 'mute' : 'volume')}</button>
+        <button class="btn icon ghost" data-help type="button" aria-label="How to play">${icon('help')}</button>
+        <button class="btn icon ghost" id="leave" type="button" aria-label="Leave party">${icon('logout')}</button>
       </div>
     </div>`;
   const bindHud = () => {
-    $('#mute')?.addEventListener('click', (e) => { setMuted(!isMuted()); e.currentTarget.textContent = isMuted() ? '🔇' : '🔊'; });
+    $('#mute')?.addEventListener('click', (e) => { setMuted(!isMuted()); e.currentTarget.innerHTML = icon(isMuted() ? 'mute' : 'volume'); });
     $('#leave')?.addEventListener('click', () => { location.hash = '#/'; });
   };
 
@@ -166,11 +168,11 @@ export function mountParty({ app, scene, code }) {
     const me = s.players.find((p) => p.id === s.you);
     const total = s.q?.total || s.settings.rounds;
     const perfect = maxPointsFor(total);
-    const inGame = s.phase !== 'lobby';
-    scene.showGauge = inGame;
+    const inPlay = s.phase !== 'lobby';
+    scene.showGauge = inPlay;
     scene.anchor = s.phase === 'question' || s.phase === 'reveal' ? 0.42 : 0.24;
     scene.setDivers(
-      s.players.filter((p) => p.connected || inGame).map((p) => ({ id: p.id, color: p.color, name: p.name, depth: inGame ? depthFor(p.score, perfect) : 0 })),
+      s.players.filter((p) => p.connected || inPlay).map((p) => ({ id: p.id, color: p.color, name: p.name, depth: inPlay ? depthFor(p.score, perfect) : 0 })),
       { instant: !prev || (prev.phase === 'over' && s.phase !== 'over') || (prev.phase === 'lobby' && s.phase === 'question') },
     );
     scene.follow(s.you);
@@ -250,11 +252,11 @@ export function mountParty({ app, scene, code }) {
       <div class="party" style="align-items:flex-end"><div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
           <div><div class="eyebrow">Room code</div><div class="code-big">${esc(s.code)}</div></div>
-          <button class="btn aqua" id="copy" type="button">Copy invite link</button>
+          <button class="btn aqua" id="copy" type="button">${icon('link')} Copy invite link</button>
         </div>
         <div class="field"><label>Divers <span id="pcount">${s.players.filter((p) => p.connected).length}/12</span></label><div class="players" id="plist">${playersHTML(s)}</div></div>
         <div class="field"><label>Settings</label>${settingsHTML(s)}</div>
-        ${isHost ? `<button class="btn coral big" id="start" type="button">Start the dive ↓</button>
+        ${isHost ? `<button class="btn coral big" id="start" type="button">Start the dive ${icon('down')}</button>
           <p class="muted" style="margin:0;font-size:13px">Share the code or link. You can start on your own to try it out.</p>` : `<div id="hostline">${hostLineHTML(s)}</div>`}
         ${CREDIT}
       </div></div>`;
@@ -269,7 +271,7 @@ export function mountParty({ app, scene, code }) {
     $('#start')?.addEventListener('click', () => { sfx.submit(); send({ t: 'start' }); });
   }
 
-  function gameHud(s, me) {
+  function playHud(s, me) {
     return hudHTML(`<b id="hDepth">0m</b><span>${(me?.score || 0).toLocaleString()} pts</span>`) +
       `<div class="hud-mid" style="top:8px"><div class="squares">${squaresHTML((me?.results || []).map((b) => ({ band: b })), s.q.total, s.q.index)}</div><small>Q ${s.q.index + 1} / ${s.q.total}<span class="sfx"> · ${esc(s.code)}</span></small></div>`;
   }
@@ -287,7 +289,7 @@ export function mountParty({ app, scene, code }) {
 
   function question(s, me) {
     const mult = multFor(s.q.index);
-    app.innerHTML = `${gameHud(s, me)}
+    app.innerHTML = `${playHud(s, me)}
       <div class="play-main">
         <div class="side-list" id="slist">${sideHTML(s)}</div>
         <div id="stage" style="width:min(600px,100%)"><div class="q-card card">
@@ -324,7 +326,7 @@ export function mountParty({ app, scene, code }) {
         <span class="muted" style="font-size:13px">${r.m == null ? '—' : `${fmtH(r.m)} · ${offText(r.m, R.answer)}`}</span>
         <span class="sc" style="color:${b.color}">+${r.pts}</span></div>`;
     }).join('');
-    app.innerHTML = `${gameHud({ ...s, q: { ...s.q, index: R.index } }, me)}
+    app.innerHTML = `${playHud({ ...s, q: { ...s.q, index: R.index } }, me)}
       <div class="play-main"><div id="stage" style="width:min(600px,100%)">
         ${revealHTML({
           band: bandByKey(mine.band), pts: mine.pts, mult: R.mult, guess: mine.m, actual: R.answer, fact: null,
@@ -347,9 +349,9 @@ export function mountParty({ app, scene, code }) {
     const isHost = s.hostId === s.you;
     const myRank = ranked.findIndex((p) => p.id === s.you) + 1;
     const medal = ['🥇', '🥈', '🥉'];
-    app.innerHTML = `${hudHTML(`<b>${esc(s.code)}</b><span>Game over</span>`)}
+    app.innerHTML = `${hudHTML(`<b>${esc(s.code)}</b><span>Final results</span>`)}
       <div class="party"><div class="card">
-        <div class="eyebrow">Game over · ${total} questions</div>
+        <div class="eyebrow">Dive complete · ${total} questions</div>
         <h2>${ranked[0]?.id === s.you ? 'You dove deepest! 🐙' : `${esc(ranked[0]?.name || '')} dove deepest!`}</h2>
         <div class="muted">You finished <b style="color:var(--ink)">#${myRank}</b> of ${ranked.length} with ${(me?.score || 0).toLocaleString()} pts · ${fmtM(depthFor(me?.score || 0, maxPointsFor(total)))}</div>
         <div class="players" id="plist">${ranked.map((p, k) => `
@@ -357,15 +359,29 @@ export function mountParty({ app, scene, code }) {
             <span class="nm">${esc(p.name)}${p.id === s.you ? ' (you)' : ''}</span>
             <span class="strip" style="gap:2px">${(p.results || []).map((b) => `<i style="width:8px;height:10px;background:${bandByKey(b).color}"></i>`).join('')}</span>
             <span class="sc">${p.score.toLocaleString()}</span></div>`).join('')}</div>
-        ${isHost ? `<div class="field"><label>Next game</label>${settingsHTML(s)}</div>
-          <div class="row"><button class="btn coral big" id="again" type="button">Play again</button><button class="btn ghost" id="toLobby" type="button">Back to lobby</button></div>`
+        ${isHost ? `<div class="field"><label>Next dive</label>${settingsHTML(s)}</div>
+          <div class="row"><button class="btn coral big" id="again" type="button">${icon('repeat')} Play again</button><button class="btn ghost" id="toLobby" type="button">Back to lobby</button></div>`
           : `<div id="hostline">${hostLineHTML(s).replace('start the dive', 'start the next dive')}</div>`}
-        <button class="btn ghost" data-go="" type="button">Leave party</button>
+        <div class="row"><button class="btn sun" id="pshare" type="button">${icon('share')} Share result</button><button class="btn ghost" data-go="" type="button">${icon('logout')} Leave party</button></div>
         ${CREDIT}
       </div></div>`;
     bindHud(); bindSettings();
     $('#again')?.addEventListener('click', () => { sfx.submit(); send({ t: 'start' }); });
     $('#toLobby')?.addEventListener('click', () => send({ t: 'lobby' }));
+    $('#pshare')?.addEventListener('click', () => {
+      sfx.click();
+      const max = maxPointsFor(total);
+      const score = me?.score || 0;
+      const ord = (n) => n + (['th', 'st', 'nd', 'rd'][(n % 100 > 10 && n % 100 < 14) ? 0 : n % 10] || 'th');
+      openShare({
+        label: `Party · ${total} questions`,
+        depth: depthFor(score, max), pts: score, max,
+        title: titleFor(score * (2500 / max)),
+        bands: me?.results || [],
+        place: `${ord(myRank)} of ${ranked.length}`,
+        color: me?.color,
+      });
+    });
   }
 
   // ------------------------------------------------------------ boot

@@ -69,6 +69,9 @@ def main():
         print("Installing worker dependencies (first run only)...")
         subprocess.run(npm(["npm", "install", "--no-fund", "--no-audit"]), cwd=WORKER, check=True)
 
+    print("Building the static pages (heights, how-to-play, sitemap)...")
+    subprocess.run([sys.executable, os.path.join(ROOT, "tools", "build_pages.py")], check=True)
+
     print(f"Starting API worker on http://localhost:{API_PORT} ...")
     flags = subprocess.CREATE_NEW_PROCESS_GROUP if IS_WIN else 0
     worker = subprocess.Popen(

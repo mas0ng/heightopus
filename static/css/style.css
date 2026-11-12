@@ -81,7 +81,9 @@ a { color: var(--aqua); }
 }
 .logo .o { color: var(--coral); }
 .home-card { width: min(560px, 100%); display: grid; gap: 12px; }
-.home-card h1 { margin: 0; font-size: 26px; line-height: 1.15; }
+.home-card h1, .home-card h2 { margin: 0; font-size: 26px; line-height: 1.15; }
+a.linkish { display: inline-block; }
+a.btn { text-decoration: none; }
 .home-card p { margin: 0; color: var(--muted); line-height: 1.45; }
 .row { display: flex; gap: 10px; flex-wrap: wrap; }
 .row > .btn { flex: 1 1 140px; }
@@ -241,7 +243,7 @@ a { color: var(--aqua); }
   .hud-left b { font-size: 17px; }
   .squares i { width: 9px; height: 9px; }
   .card { padding: 14px 14px; }
-  .home-card h1 { font-size: 22px; }
+  .home-card h1, .home-card h2 { font-size: 22px; }
   .band-head h2 { font-size: 25px; }
   .cmp-row { grid-template-columns: 54px 1fr auto; font-size: 13px; }
   .units button { padding: 6px 7px; }
@@ -266,4 +268,26 @@ a { color: var(--aqua); }
 }
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
+}
+
+/* ---------- icons (Lucide) */
+.ico { flex: none; display: block; }
+.btn.icon .ico { width: 20px; height: 20px; }
+.btn .ico { margin: -2px 0; }
+
+/* ---------- share panel */
+.share-preview { border-radius: 14px; overflow: hidden; background: #08141f; aspect-ratio: 1 / 1; display: grid; place-items: center; width: min(100%, 42vh, 420px); margin: 0 auto; }
+.share-preview img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.share-text { margin: 0; padding: 12px 14px; border-radius: 12px; background: #08141f; border: 1px solid var(--line); font: 600 14px/1.5 'DM Sans', system-ui, sans-serif; white-space: pre-wrap; color: var(--ink); max-height: 160px; overflow: auto; }
+.share-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.share-actions .btn { min-height: 44px; font-size: 15px; padding: 8px 10px; }
+.share-actions .btn[hidden] { display: none; }
+
+.modal:has(.share-wrap) { width: min(860px, 100%); }
+.share-wrap { display: grid; gap: 12px; }
+.share-side { display: grid; gap: 10px; align-content: start; }
+@media (min-width: 720px) {
+  .share-wrap { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .share-preview { width: 100%; }
+  .share-text { max-height: 220px; }
 }

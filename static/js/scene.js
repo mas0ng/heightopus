@@ -87,7 +87,7 @@ function octoPal(color) {
   }
   return palCache.get(color);
 }
-function drawOcto(g, x, y, color, frame) {
+export function drawOcto(g, x, y, color, frame) {
   const p = octoPal(color);
   const rows = OCTO_FRAMES[frame];
   for (let r = 0; r < rows.length; r++) {

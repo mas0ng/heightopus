@@ -1,4 +1,4 @@
-// Shared by the browser game and the Cloudflare Worker (party rooms).
+// Shared by the browser app and the Cloudflare Worker (party rooms).
 // Keep this file free of DOM / browser APIs.
 
 export const BANDS = [

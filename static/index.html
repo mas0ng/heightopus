@@ -3,58 +3,103 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
-  <title>Heightopus · Guess How Tall It Is</title>
-  <meta name="description" content="Heightopus is a free daily guessing game: guess the height of famous things, and the closer you get, the deeper your pixel octopus dives." />
+  <title>Heightopus – How Tall Is It? Daily Height Guessing Challenge</title>
+  <meta name="description" content="Guess the height of famous landmarks, skyscrapers, mountains, animals and people. Ten new questions every day, unlimited rounds and live rooms with friends. Free." />
   <meta name="theme-color" content="#06101d" />
-  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
   <link rel="canonical" href="https://heightopus.com/" />
   <link rel="author" href="https://mas0ng.com/projects/heightopus/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Heightopus" />
+  <meta property="og:locale" content="en_GB" />
   <meta property="og:url" content="https://heightopus.com/" />
-  <meta property="og:title" content="Heightopus · Guess How Tall It Is" />
-  <meta property="og:description" content="Guess the height of famous things and dive your pixel octopus deeper. A free daily game with unlimited play and live party rooms." />
+  <meta property="og:title" content="Heightopus – How Tall Is It?" />
+  <meta property="og:description" content="Guess the height of famous things. The closer you get, the deeper your pixel octopus dives. Ten new questions every day, free." />
   <meta property="og:image" content="https://heightopus.com/img/og-1200x630.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="Heightopus · Guess the height. Dive deeper." />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Heightopus · Guess How Tall It Is" />
-  <meta name="twitter:description" content="Guess the height of famous things and dive your pixel octopus deeper. A free daily game with unlimited play and live party rooms." />
+  <meta name="twitter:title" content="Heightopus – How Tall Is It?" />
+  <meta name="twitter:description" content="Guess the height of famous things. The closer you get, the deeper your pixel octopus dives. Ten new questions every day, free." />
   <meta name="twitter:image" content="https://heightopus.com/img/og-1200x630.jpg" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "VideoGame",
-    "@id": "https://heightopus.com/#game",
-    "name": "Heightopus",
-    "url": "https://heightopus.com/",
-    "description": "Guess the height of famous things and dive your pixel octopus deeper. A free daily game with unlimited play and live party rooms.",
-    "applicationCategory": "GameApplication",
-    "operatingSystem": "Any modern web browser",
-    "gamePlatform": "Web browser",
-    "genre": ["Trivia", "Estimation", "Party"],
-    "playMode": ["SinglePlayer", "MultiPlayer"],
-    "image": "https://heightopus.com/img/og-1200x1200.jpg",
-    "screenshot": ["https://heightopus.com/img/screenshot-dive.jpg", "https://heightopus.com/img/screenshot-party.jpg"],
-    "author": { "@type": "Person", "@id": "https://mas0ng.com/#person", "name": "Mason Gibbs", "url": "https://mas0ng.com/" },
-    "sameAs": ["https://mas0ng.com/projects/heightopus/", "https://github.com/mas0ng/heightopus"]
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://heightopus.com/#website",
+        "url": "https://heightopus.com/",
+        "name": "Heightopus",
+        "description": "Guess the height of famous landmarks, skyscrapers, mountains, animals and people. Ten new questions every day.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://mas0ng.com/#person" }
+      },
+      {
+        "@type": "WebApplication",
+        "@id": "https://heightopus.com/#app",
+        "name": "Heightopus",
+        "url": "https://heightopus.com/",
+        "description": "Guess the height of famous landmarks, skyscrapers, mountains, animals and people. Ten new questions every day, unlimited rounds and live rooms with friends.",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Any modern web browser",
+        "browserRequirements": "Requires JavaScript",
+        "isAccessibleForFree": true,
+        "inLanguage": "en",
+        "image": "https://heightopus.com/img/og-1200x1200.jpg",
+        "screenshot": ["https://heightopus.com/img/screenshot-dive.jpg", "https://heightopus.com/img/screenshot-party.jpg"],
+        "featureList": ["Ten new height questions every day", "Unlimited practice rounds", "Live rooms for 2 to 12 people", "Metres or feet", "Works on phones, tablets and Chromebooks"],
+        "author": { "@id": "https://mas0ng.com/#person" },
+        "isPartOf": { "@id": "https://heightopus.com/#website" },
+        "sameAs": ["https://mas0ng.com/projects/heightopus/", "https://github.com/mas0ng/heightopus"]
+      },
+      {
+        "@type": "Person",
+        "@id": "https://mas0ng.com/#person",
+        "name": "Mason Gibbs",
+        "url": "https://mas0ng.com/"
+      }
+    ]
   }
   </script>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.webmanifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Pixelify+Sans:wght@500;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
   <canvas id="scene" aria-hidden="true"></canvas>
   <canvas id="overlay" aria-hidden="true"></canvas>
-  <main id="app" aria-live="polite"></main>
+  <main id="app" aria-live="polite">
+    <!-- Pre-rendered home screen: visible before JavaScript loads and readable by search engines. -->
+    <div class="home">
+      <h1 class="logo">Height<span class="o">opus</span></h1>
+      <div style="display:grid;gap:8px;width:min(560px,100%)">
+        <div class="home-card card">
+          <div class="eyebrow">Daily · 10 questions · Free</div>
+          <h2>How tall is it, really?</h2>
+          <p>Guess the height of famous landmarks, skyscrapers, mountains, animals and people. The closer you get, the deeper your octopus dives, all the way down to Challenger Deep.</p>
+          <div class="row">
+            <a class="btn coral big" href="/#/play">Dive in <svg class="ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></a>
+            <a class="btn aqua big" href="/#/party"><svg class="ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Party</a>
+          </div>
+          <div class="mini-links">
+            <a class="linkish" href="/#/unlimited">Unlimited</a>
+            <a class="linkish" href="/how-to-play/">How to play</a>
+            <a class="linkish" href="/heights/">All heights</a>
+          </div>
+        </div>
+        <div class="credit">Made by <a href="https://mas0ng.com/projects/heightopus/" target="_blank" rel="noopener">mas0ng.com</a></div>
+      </div>
+    </div>
+  </main>
   <div id="zone" class="zone-banner" role="status"><b></b><span></span></div>
   <div id="toast" class="toast" role="status"></div>
-  <noscript><p style="position:fixed;inset:0;display:grid;place-items:center;color:#fff">Heightopus needs JavaScript to dive.</p></noscript>
-  <script type="module" src="js/app.js"></script>
+  <noscript><p style="position:fixed;left:0;right:0;bottom:12px;text-align:center;color:#fff;font-family:sans-serif">Heightopus needs JavaScript to dive. You can still <a href="/heights/" style="color:#56e0f0">browse all the heights</a>.</p></noscript>
+  <script type="module" src="/js/app.js"></script>
 </body>
 </html>

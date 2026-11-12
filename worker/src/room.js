@@ -119,6 +119,12 @@ export class Room extends DurableObject {
         if (this.connected().every((x) => x.id in this.s.guesses)) return this.revealNow();
         break;
       }
+      case 'next': {
+        // Host skips the reveal countdown, only when everyone answered (or passed).
+        if (!isHost || ph !== 'reveal' || !this.s.reveal?.allIn || m.index !== this.s.qIndex) return;
+        if (this.s.qIndex + 1 < this.s.qIds.length) return this.startQuestion(this.s.qIndex + 1);
+        return this.gameOver();
+      }
       case 'lobby': {
         if (!isHost || ph !== 'over') return;
         this.s.phase = 'lobby';
@@ -175,6 +181,7 @@ export class Room extends DurableObject {
   async revealNow() {
     const i = this.s.qIndex;
     const q = byId[this.s.qIds[i]];
+    const allIn = this.connected().every((p) => p.id in this.s.guesses);
     let best = Infinity;
     for (const g of Object.values(this.s.guesses)) if (g != null) best = Math.min(best, ratioOff(g, q.m));
     const results = this.players().map((p) => {
@@ -188,7 +195,7 @@ export class Room extends DurableObject {
       };
     });
     results.sort((a, b) => b.pts - a.pts || (a.m == null) - (b.m == null) || ratioOff(a.m, q.m) - ratioOff(b.m, q.m));
-    this.s.reveal = { index: i, text: q.q, cat: q.cat, answer: q.m, fact: q.fact, mult: multFor(i), results };
+    this.s.reveal = { index: i, text: q.q, cat: q.cat, answer: q.m, fact: q.fact, mult: multFor(i), results, allIn };
     this.s.phase = 'reveal';
     this.s.nextAt = Date.now() + REVEAL_MS;
     await this.ctx.storage.setAlarm(this.s.nextAt);

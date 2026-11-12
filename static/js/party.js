@@ -346,6 +346,8 @@ export function mountParty({ app, scene, code }) {
 
   function reveal(s, me) {
     const R = s.reveal;
+    const last = R.index + 1 >= s.q.total;
+    const canSkip = s.hostId === s.you && !!R.allIn;
     const mine = R.results.find((r) => r.id === s.you) || { band: 'pass', pts: 0, m: null };
     const list = R.results.map((r) => {
       const b = bandByKey(r.band);
@@ -358,15 +360,19 @@ export function mountParty({ app, scene, code }) {
       <div class="play-main"><div id="stage" style="width:min(600px,100%)">
         ${revealHTML({
           band: bandByKey(mine.band), pts: mine.pts, mult: R.mult, guess: mine.m, actual: R.answer, fact: null,
-          footLeft: `<span id="nextIn"></span>`, showNext: false,
+          footLeft: `<span id="nextIn"></span>`, showNext: canSkip,
+          nextLabel: last ? `Final results ${icon('right', 18)}` : `Next question ${icon('right', 18)}`,
           extra: `<div class="muted" style="font-size:13px;margin-top:-4px">${esc(R.text)}</div><div class="guess-list">${list}</div>`,
         })}
       </div></div>`;
     bindHud(); depthLoop(); animateBars($('#stage'));
-    const last = R.index + 1 >= s.q.total;
+    $('[data-next]')?.addEventListener('click', (e) => {
+      sfx.submit(); e.currentTarget.disabled = true;
+      send({ t: 'next', index: R.index });
+    });
     const tick = () => {
       const left = Math.max(0, Math.ceil((R.nextAt - offset - Date.now()) / 1000));
-      const el = $('#nextIn'); if (el) el.textContent = last ? `Final results in ${left}s` : `Next question in ${left}s`;
+      const el = $('#nextIn'); if (el) el.textContent = (last ? `Final results in ${left}s` : `Next question in ${left}s`);
     };
     tick(); revealT = setInterval(tick, 250);
   }
